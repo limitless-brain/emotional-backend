@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\YoutubeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,5 +38,9 @@ Route::prefix('v1')->group(function () {
         // User
         Route::get('/user', [AuthController::class, 'user']);
         Route::get('/logout', [AuthController::class, 'logout']);
+
+        // Youtube
+        Route::get('/search', [YoutubeController::class, 'search']);
+        Route::get('/featured', [YoutubeController::class, 'featured']);
     });
 });

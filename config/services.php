@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'youtube' => [
+        'api_key' => env('YOUTUBE_API_SECRET_KEY'),
+        'search_endpoint' => env('YOUTUBE_API_SEARCH_ENDPOINT'),
+        'video_endpoint' => env('YOUTUBE_API_VIDEO_ENDPOINT'),
+        'videos_endpoint' => env('YOUTUBE_API_VIDEOS_ENDPOINT')
+    ]
 ];
