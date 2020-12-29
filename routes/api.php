@@ -42,5 +42,7 @@ Route::prefix('v1')->group(function () {
         // Youtube
         Route::get('/search', [YoutubeController::class, 'search']);
         Route::get('/featured', [YoutubeController::class, 'featured']);
+        Route::get('/videos/{id}/audio', [YoutubeController::class, 'getAudioFile']);
+        Route::get('/lyrics',[YoutubeController::class, 'getLyrics']);
     });
 });
