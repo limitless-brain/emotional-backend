@@ -11,6 +11,7 @@
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * The variable define token life at specific number days
@@ -49,7 +50,7 @@ function current_user()
  * @param array $data array of data to send it with the response
  * @return JsonResponse
  */
-function response_success($data = [])
+function response_success($data = []): JsonResponse
 {
     return response()->json($data);
 }
@@ -60,9 +61,9 @@ function response_success($data = [])
  * @param array $data array of data to send it with the response
  * @return JsonResponse
  */
-function response_failure_401($data = [])
+function response_unauthorized_401($data = []): JsonResponse
 {
-    return response()->json($data, 401);
+    return response()->json($data,  Response::HTTP_UNAUTHORIZED);
 }
 
 /**
@@ -71,9 +72,31 @@ function response_failure_401($data = [])
  * @param array $data array of data to send it with the response
  * @return JsonResponse
  */
-function response_data_created($data = [])
+function response_data_created($data = []): JsonResponse
 {
-    return response()->json($data, 201);
+    return response()->json($data, Response::HTTP_CREATED);
+}
+
+/**
+ * the method that returns a json response object with status code 204
+ *
+ * @param array $data array of data to send it with the response
+ * @return JsonResponse
+ */
+function response_no_content($data = []): JsonResponse
+{
+    return response()->json($data, Response::HTTP_NO_CONTENT);
+}
+
+/**
+ * the method that returns a json response object with status code 500
+ *
+ * @param array $data array of data to send it with the response
+ * @return JsonResponse
+ */
+function response_internal_server_error($data = []): JsonResponse
+{
+    return response()->json($data, Response::HTTP_INTERNAL_SERVER_ERROR);
 }
 
 /**
@@ -82,7 +105,28 @@ function response_data_created($data = [])
  * @param $message
  * @return array
  */
-function response_message($message)
+function response_message($message): array
 {
     return ['message' => $message];
 }
+
+/**
+ * the method that returns an array from string
+ *
+ * @param $str
+ * @param string $separator
+ * @param string[] $junk
+ * @param string $replace
+ * @return array
+ */
+function str_to_array($str, $separator=',', $junk = ['[',']','\''], $replace=''): array
+{
+    // clean the junk
+    $str = str_replace($junk,$replace,$str);
+    if (!str_contains(',',$str))
+        return [$str];
+    // return the array
+    return explode($separator,$str);
+}
+
+

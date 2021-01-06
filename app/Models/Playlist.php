@@ -25,4 +25,5 @@ class Playlist extends Model
     {
         return $this->belongsTo(User::class);
     }
+
 }

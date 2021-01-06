@@ -43,7 +43,7 @@ class AuthController extends Controller
         if (!auth()->attempt($credentials, $attrs['remember_me'])) {
             // user authorization failed
             // return 401 response
-            return response_failure_401(response_message('The submitted data does not match the records we have.'));
+            return response_unauthorized_401(response_message('The submitted data does not match the records we have.'));
         }
 
         // generate access token
@@ -96,7 +96,6 @@ class AuthController extends Controller
         $attrs = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
-            'organization_id' => 'required',
             'password' => 'required|string|confirmed'
         ]);
 
@@ -108,17 +107,5 @@ class AuthController extends Controller
 
         // return response as json object
         return response_data_created(response_message('Successfully signed up the user.'));
-    }
-
-    /**
-     * the method that return a user profile
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function user(Request $request): JsonResponse
-    {
-        // return response as json object
-        return response_success(current_user());
     }
 }

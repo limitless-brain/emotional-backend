@@ -35,10 +35,15 @@ class YoutubeController extends Controller
     public function search(Request $request): JsonResponse
     {
         $query = $request->get('query');
+        $token = $request->get('pageToken');
         $endpoint = config('services.youtube.search_endpoint');
         $type = 'video';
 
-        $url = "$endpoint?part=$this->part&maxResults=$this->maxResults&type=$type&videoCategoryId=$this->category&key=$this->apiKey&q=$query";
+        $url = "$endpoint?part=$this->part&maxResults=$this->maxResults&type=$type&videoCategoryId=$this->category&key=$this->apiKey";
+        if($query)
+            $url .= "&q=$query";
+        if($token)
+            $url .= "&pageToken=$token";
 
         $response = Http::get($url);
 
@@ -57,7 +62,7 @@ class YoutubeController extends Controller
         return response_success($response->body());
     }
 
-    public function getAudioFile($id)
+    public function getAudioFile($id): JsonResponse
     {
         // remember to install yt-dl
         // sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
@@ -82,7 +87,7 @@ class YoutubeController extends Controller
 
         if($video->getError() !== null)
         {
-            return response_failure_401(response_message($video->getError()));
+            return response_unauthorized_401(response_message($video->getError()));
         }
 
         $result = [
@@ -101,8 +106,12 @@ class YoutubeController extends Controller
 
     public function getLyrics(): JsonResponse
     {
-        $result = Http::get('https://api.lyrics.ovh/v1/faydee/catch%20me');
+        //libxml_use_internal_errors(true);
+        $page = file_get_contents('https://genius.com/Faydee-far-away-lyrics');
+        $dom = new \DOMDocument();
+        $dom->loadHTML($page, LIBXML_NOWARNING|LIBXML_NOERROR);
+        $result = $dom->childNodes->item(0);
 
-        return response_success($result->json('lyrics'));
+        return response_success($result);
     }
 }

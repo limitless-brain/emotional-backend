@@ -14,9 +14,9 @@ class CreateArtistsTable extends Migration
     public function up()
     {
         Schema::create('artists', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name')->unique();
-            $table->string('image')->nullable();
+            $table->string('image')->default('');
             $table->timestamps();
         });
     }

@@ -15,16 +15,18 @@ class CreateSongsTable extends Migration
     {
         Schema::create('songs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignId('album_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('artist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid('album_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignUuid('artist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title');
-            $table->float('length');
-            $table->integer('track');
-            $table->integer('disc')->default(1);
-            $table->text('lyrics');
-            $table->text('path');
+            $table->integer('duration_ms');
+            $table->integer('track_number');
+            $table->integer('disc_number')->default(1);
+            $table->text('lyrics')->nullable();
+            $table->text('path')->nullable();
+            $table->string('youtube_id')->nullable();
             $table->string('feeling')->default('neutral');
-            $table->integer('mtime');
+            $table->integer('year');
+            $table->timestamp('release_date');
             $table->timestamps();
         });
     }

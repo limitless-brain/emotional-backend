@@ -21,6 +21,8 @@ class CreateInteractionsTable extends Migration
             $table->boolean('match')->default(false);
             $table->integer('play_count')->default(0);
             $table->timestamps();
+
+            $table->unique(['user_id','song_id']);
         });
     }
 

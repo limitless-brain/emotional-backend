@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
@@ -50,5 +51,11 @@ class User extends Authenticatable
     public function interactions(): HasMany
     {
         return $this->hasMany(Interaction::class);
+    }
+
+    public function validate_password($password): bool
+    {
+        // return check result
+        return Hash::check($password, $this->pasword);
     }
 }

@@ -4,8 +4,91 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d871c36a3e5df692ef25d395ea2b6ea",
+    "content-hash": "ccb0ecad246bc99e52e35a9020291a0f",
     "packages": [
+        {
+            "name": "aerni/laravel-spotify",
+            "version": "v1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aerni/laravel-spotify.git",
+                "reference": "3c7d96dc094e9ec9a9146b35b589c0f04f9fa30c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aerni/laravel-spotify/zipball/3c7d96dc094e9ec9a9146b35b589c0f04f9fa30c",
+                "reference": "3c7d96dc094e9ec9a9146b35b589c0f04f9fa30c",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5|^7.0",
+                "illuminate/support": "^7.0|^8.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "nunomaduro/collision": "^5.0",
+                "orchestra/testbench": "^5.0|^6.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Aerni\\Spotify\\Providers\\SpotifyClientServiceProvider",
+                        "Aerni\\Spotify\\Providers\\SpotifyServiceProvider"
+                    ],
+                    "aliases": {
+                        "SpotifyClient": "Aerni\\Spotify\\Facades\\SpotifyClientFacade",
+                        "Spotify": "Aerni\\Spotify\\Facades\\SpotifyFacade",
+                        "SpotifySeed": "Aerni\\Spotify\\Facades\\SpotifySeedFacade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Aerni\\Spotify\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Aerni",
+                    "email": "hello@michaelaerni.ch",
+                    "homepage": "https://www.michaelaerni.ch",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A Laravel wrapper for the Spotify Web API",
+            "homepage": "https://github.com/aerni/laravel-spotify",
+            "keywords": [
+                "Album",
+                "Artists",
+                "albums",
+                "api",
+                "artist",
+                "browse",
+                "laravel",
+                "music",
+                "playlist",
+                "playlists",
+                "search",
+                "songs",
+                "spotify",
+                "spotify-api",
+                "spotify-web-api",
+                "track",
+                "tracks",
+                "wrapper"
+            ],
+            "support": {
+                "issues": "https://github.com/aerni/laravel-spotify/issues",
+                "source": "https://github.com/aerni/laravel-spotify/tree/v1.6.1"
+            },
+            "time": "2021-01-02T15:06:29+00:00"
+        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.0.2",
@@ -1256,6 +1339,75 @@
                 "source": "https://github.com/laravel/passport"
             },
             "time": "2020-11-26T07:57:30+00:00"
+        },
+        {
+            "name": "laravel/scout",
+            "version": "v8.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/scout.git",
+                "reference": "ece6758b82c51ff7f5e011f243a7c6b33711a847"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/scout/zipball/ece6758b82c51ff7f5e011f243a7c6b33711a847",
+                "reference": "ece6758b82c51ff7f5e011f243a7c6b33711a847",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/bus": "^6.0|^7.0|^8.0",
+                "illuminate/contracts": "^6.0|^7.0|^8.0",
+                "illuminate/database": "^6.0|^7.0|^8.0",
+                "illuminate/http": "^6.0|^7.0|^8.0",
+                "illuminate/pagination": "^6.0|^7.0|^8.0",
+                "illuminate/queue": "^6.0|^7.0|^8.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "php": "^7.2|^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^8.0|^9.3"
+            },
+            "suggest": {
+                "algolia/algoliasearch-client-php": "Required to use the Algolia engine (^2.2)."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "8.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Scout\\ScoutServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Scout\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Laravel Scout provides a driver based solution to searching your Eloquent models.",
+            "keywords": [
+                "algolia",
+                "laravel",
+                "search"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/scout/issues",
+                "source": "https://github.com/laravel/scout"
+            },
+            "time": "2020-12-30T15:52:14+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -8487,7 +8639,10 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0"
+        "php": "^7.3|^8.0",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-libxml": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

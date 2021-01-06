@@ -11,7 +11,7 @@ class Artist extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
     protected $hidden = ['created_at','updated_at'];
 
     public function albums(): HasMany

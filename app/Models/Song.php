@@ -11,16 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Song extends Model
 {
     use HasFactory;
+    use Intractable;
 
     protected $guarded = [];
 
-    protected $hidden = ['path','mtime','updated_at'];
+    protected $hidden = ['lyrics', 'created_at', 'updated_at'];
 
     protected $casts = [
-        'length' => 'float',
-        'mtime' => 'int',
-        'track' => 'int',
-        'disc' => 'int'
+        'duration_ms' => 'int',
+        'track_number' => 'int',
+        'disc_number' => 'int'
     ];
 
     public function artist(): BelongsTo
@@ -43,4 +43,8 @@ class Song extends Model
         return $this->hasMany(Interaction::class);
     }
 
+//    public function getRouteKey(): string
+//    {
+//        return 'youtube_id';
+//    }
 }

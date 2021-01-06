@@ -14,8 +14,8 @@ class CreateAlbumsTable extends Migration
     public function up()
     {
         Schema::create('albums', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('artist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('artist_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->string('cover')->default('');
             $table->timestamps();
