@@ -129,4 +129,90 @@ function str_to_array($str, $separator=',', $junk = ['[',']','\''], $replace='')
     return explode($separator,$str);
 }
 
+/**
+ * The method that grab lyrics for a song by artist and song name
+ * @param string $artist
+ * @param string $title
+ * @return string the lyrics string
+ */
+function getLyrics(string $artist, string $title): string {
+
+    // html delimiters
+    $delim1 = "</div></div></div></div><div class=\"hwc\"><div class=\"BNeawe tAd8D AP7Wnd\"><div><div class=\"BNeawe tAd8D AP7Wnd\">";
+    $delim2 = "</div></div></div></div></div><div><span class=\"hwc\"><div class=\"BNeawe uEec3 AP7Wnd\">";
+
+    // scaffolding google search url
+    $url = config('services.youtube.google_search_endpoint');
+    if ($artist)
+        $url .= urlencode($artist) . '+';
+    if ($title)
+        $url .= urlencode($title);
+
+    // result variable
+    $result = 'not found';
+
+    try {
+        // read page content as string
+        $page = file_get_contents($url . '+lyrics');
+
+        // split by delimiter 1
+        $page = explode($delim1, $page)[1];
+
+        // split by delimiter 2
+        $result = explode($delim2, $page)[0];
+
+    } catch (Exception $exception) {
+
+        // lyrics not found let's try with different search
+        try {
+
+            // read page content as string
+            $page = file_get_contents($url . '+song+lyrics');
+
+            // split by delimiter 1
+            $page = explode($delim1, $page)[1];
+
+            // split by delimiter 2
+            $result = explode($delim2, $page)[0];
+
+        } catch (Exception $exception) {
+
+            // lyrics not found let's try with different search
+            try {
+
+                // read page content as string
+                $page = file_get_contents($url . '+song+');
+
+                // split by delimiter 1
+                $page = explode($delim1, $page)[1];
+
+                // split by delimiter 2
+                $result = explode($delim2, $page)[0];
+
+            } catch (Exception $exception) {
+
+                // lyrics not found let's try with different search
+                try {
+
+                    // read page content as string
+                    $page = file_get_contents($url);
+
+                    // split by delimiter 1
+                    $page = explode($delim1, $page)[1];
+
+                    // split by delimiter 2
+                    $result = explode($delim2, $page)[0];
+
+                } catch (Exception $exception) {
+                    // send an exception
+                    return response_internal_server_error(response_message($exception->getMessage()));
+                }
+            }
+        }
+    }
+
+    // return the result
+    return strip_tags($result);
+}
+
 

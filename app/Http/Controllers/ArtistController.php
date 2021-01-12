@@ -3,83 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Artist;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ArtistController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * The method that returns list of all artists
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        // gets artists
+        return response_success(Artist::all()->orderBy($request->get('orderBy'),$request->get('order'))
+            ->paginate(10));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * The method that returns list of all artist albums.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Artist $artist
+     * @return JsonResponse
      */
-    public function create()
+    public function show(Request $request, Artist $artist): JsonResponse
     {
-        //
-    }
+        // get the artist albums
+        $album = $artist->albums()->orderBy($request->get('orderBy'),$request->get('order'));
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Artist  $artist
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Artist $artist)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Artist  $artist
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Artist $artist)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Artist  $artist
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Artist $artist)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Artist  $artist
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Artist $artist)
-    {
-        //
+        /// return success response with song information
+        return response_success([
+            'artist' => $artist,
+            'album' => $album
+        ]);
     }
 }

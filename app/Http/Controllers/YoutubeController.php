@@ -13,10 +13,6 @@ use YoutubeDl\YoutubeDl;
 
 class YoutubeController extends Controller
 {
-
-    protected $delim1 = "</div></div></div></div><div class=\"hwc\"><div class=\"BNeawe tAd8D AP7Wnd\"><div><div class=\"BNeawe tAd8D AP7Wnd\">";
-    protected $delim2 = "</div></div></div></div></div><div><span class=\"hwc\"><div class=\"BNeawe uEec3 AP7Wnd\">";
-
     protected $apiKey;
     protected $part = 'snippet';
     protected $maxResults = 12;
@@ -156,48 +152,7 @@ class YoutubeController extends Controller
             return response_internal_server_error(response_message($exception->getMessage()));
         }
 
-        // google search url
-        $url = config('services.youtube.google_search_endpoint');
-        if ($artist)
-            $url .= urlencode($artist) . '+';
-        if ($title)
-            $url .= urlencode($title);
-
-
-        $result = 'not found';
-
-        try {
-            // read page content as string
-            $page = file_get_contents($url . '+lyrics');
-            $page = explode($this->delim1, $page)[1];
-            $result = explode($this->delim2, $page);
-        } catch (Exception $exception) {
-            try {
-                // read page content as string
-                $page = file_get_contents($url . '+song+lyrics');
-                $page = explode($this->delim1, $page)[1];
-                $result = explode($this->delim2, $page);
-            } catch (Exception $exception) {
-                try {
-                    // read page content as string
-                    $page = file_get_contents($url . '+song+');
-                    $page = explode($this->delim1, $page)[1];
-                    $result = explode($this->delim2, $page);
-                } catch (Exception $exception) {
-                    try {
-                        // read page content as string
-                        $page = file_get_contents($url);
-                        $page = explode($this->delim1, $page)[1];
-                        $result = explode($this->delim2, $page);
-                    } catch (Exception $exception) {
-                        return response_internal_server_error(response_message($exception->getMessage()));
-                    }
-
-                }
-            }
-        }
-
-        $result = strip_tags($result[0]);
+        $result = getLyrics($artist, $title);
 
         if (isset($songRecord)) {
             $songRecord->lyrics = $result;

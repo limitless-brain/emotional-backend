@@ -62,6 +62,10 @@ class SongController extends Controller
     public function getLyrics(Song $song): JsonResponse
     {
         // return  success response with lyrics of the song
+        if (!$song->lyrics) {
+            $result = getLyrics($song->artist()->name, $song->title);
+            return response_success($result);
+        }
         return response_success($song->lyrics);
     }
 

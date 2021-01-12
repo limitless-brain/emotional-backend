@@ -3,50 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * The method that returns list of all albums
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        //
+        // gets albums
+        return response_success(Album::all()->orderBy($request->get('orderBy'),$request->get('order'))
+            ->paginate(10));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * The method that returns list of all album songs.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param \App\Models\Album $album
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function show(Request $request, Album $album): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Album  $album
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Album $album)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Album  $album
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Album $album)
-    {
-        //
+        // get the album songs
+        $songs = $album->songs()->orderBy($request->get('orderBy'),$request->get('order'));
+        // return success response with song information
+        return response_success([
+            'album' => $album,
+            'songs' => $songs
+        ]);
     }
 }

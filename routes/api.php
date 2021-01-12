@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
@@ -55,14 +57,21 @@ Route::prefix('v1')->group(function () {
         Route::get('/songs',[SongController::class,'index']);
         Route::get('/songs/{song}',[SongController::class,'getSong']);
         Route::get('/songs/{song}/lyrics',[SongController::class,'getLyrics']);
-
         // interactions
-        Route::post('/interactions/{song}/played',[SongController::class,'played']);
-        Route::post('/interactions/{song}/like',[SongController::class,'like']);
-        Route::post('/interactions/{song}/unlike',[SongController::class,'dislike']);
-        Route::post('/interactions/{song}/match',[SongController::class,'match']);
-        Route::post('/interactions/{song}/un-match',[SongController::class,'unMatch']);
-        Route::get('/interactions/{song}',[SongController::class,'getInteractions']);
+        Route::post('/songs/{song}/played',[SongController::class,'played']);
+        Route::post('/songs/{song}/like',[SongController::class,'like']);
+        Route::post('/songs/{song}/unlike',[SongController::class,'dislike']);
+        Route::post('/songs/{song}/match',[SongController::class,'match']);
+        Route::post('/songs/{song}/un-match',[SongController::class,'unMatch']);
+        Route::get('/songs/{song}/interactions',[SongController::class,'getInteractions']);
+
+        // album
+        Route::get('/albums',[AlbumController::class,'index']);
+        Route::get('/albums/{album}',[AlbumController::class,'show']);
+
+        // artist
+        Route::get('/artists',[ArtistController::class,'index']);
+        Route::get('/artists/{artist}',[ArtistController::class,'show']);
 
         // playlist
         Route::apiResource('/playlists', PlaylistController::class);
