@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Interaction;
 use App\Models\Song;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -9,13 +10,21 @@ use Illuminate\Http\Request;
 class SongController extends Controller
 {
 
-    public function store($array)
+    /**
+     * The method that returns list of all songs
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function index(Request $request): JsonResponse
     {
-
+        // gets songs
+        return response_success(Song::withInteractions()->orderBy($request->get('orderBy'),$request->get('order'))
+            ->paginate(10));
     }
 
     /**
-     * Get a specific song by youtube id.
+     * The method that returns a specific song by youtube id.
      *
      * @param $id string youtube id
      * @return JsonResponse
@@ -23,14 +32,29 @@ class SongController extends Controller
     public function getSong(string $id): JsonResponse
     {
         // get the song
-        $song = Song::withInteractions()->where(['youtube' => $id])->get()->first();
+        $song = Song::withInteractions()->where(['id' => $id])->get()->first();
 
         // return success response with song information
         return response_success($song);
     }
 
     /**
-     * Get lyrics for specific song.
+     * The method that returns a specific song by youtube id.
+     *
+     * @param $id string youtube id
+     * @return JsonResponse
+     */
+    public function getInteractions(string $id): JsonResponse
+    {
+        // get the song
+        $song = Interaction::where(['id' => $id])->get()->first();
+
+        // return success response with song information
+        return response_success($song);
+    }
+
+    /**
+     * The method that returns lyrics for specific song.
      *
      * @param Song $song
      * @return JsonResponse
@@ -42,7 +66,7 @@ class SongController extends Controller
     }
 
     /**
-     * like a specific song.
+     * The method that likes a specific song.
      *
      * @param Song $song
      * @return JsonResponse
@@ -57,7 +81,7 @@ class SongController extends Controller
     }
 
     /**
-     * dislike a specific song.
+     * The method that dislikes a specific song.
      *
      * @param Song $song
      * @return JsonResponse
@@ -72,7 +96,7 @@ class SongController extends Controller
     }
 
     /**
-     * match a specific song.
+     * The method that match a specific song.
      *
      * @param Song $song
      * @return JsonResponse
@@ -87,7 +111,7 @@ class SongController extends Controller
     }
 
     /**
-     * un match a specific song.
+     * The method that un match a specific song.
      *
      * @param Song $song
      * @return JsonResponse
@@ -102,7 +126,7 @@ class SongController extends Controller
     }
 
     /**
-     * un match a specific song.
+     * The method that mark a specific song as played.
      *
      * @param Song $song
      * @return JsonResponse

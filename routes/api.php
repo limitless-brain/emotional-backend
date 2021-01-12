@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AIController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
@@ -47,26 +48,29 @@ Route::prefix('v1')->group(function () {
         Route::get('/search', [YoutubeController::class, 'search']);
         Route::get('/featured', [YoutubeController::class, 'featured']);
         Route::get('/videos/{id}/audio', [YoutubeController::class, 'getAudioFile']);
+        Route::get('/videos/find',[YoutubeController::class,'getVideoId']);
         Route::get('/lyrics',[YoutubeController::class, 'getLyrics']);
 
         // Song
+        Route::get('/songs',[SongController::class,'index']);
         Route::get('/songs/{song}',[SongController::class,'getSong']);
         Route::get('/songs/{song}/lyrics',[SongController::class,'getLyrics']);
-        Route::post('/songs/{song}/like', [SongController::class,'like']);
 
         // interactions
-        Route::post('/interaction/play',[]);
-        Route::post('/interaction/like',[]);
-        Route::post('/interaction/unlike',[]);
-        Route::post('/interaction/match',[]);
-        Route::post('/interaction/un-match',[]);
-        Route::get('/interaction/recently-played/{count?}',[])->where([
-            'count' => '\d+',
-        ]);
+        Route::post('/interactions/{song}/played',[SongController::class,'played']);
+        Route::post('/interactions/{song}/like',[SongController::class,'like']);
+        Route::post('/interactions/{song}/unlike',[SongController::class,'dislike']);
+        Route::post('/interactions/{song}/match',[SongController::class,'match']);
+        Route::post('/interactions/{song}/un-match',[SongController::class,'unMatch']);
+        Route::get('/interactions/{song}',[SongController::class,'getInteractions']);
 
         // playlist
-        Route::apiResource('/playlist', PlaylistController::class);
-        Route::put('/playlist/{playlist}/sync',[PlaylistController::class,'sync']);
-        Route::get('/playlist/{playlist}/songs',[PlaylistController::class,'getSongs']);
+        Route::apiResource('/playlists', PlaylistController::class);
+        Route::put('/playlists/{playlist}/{song}',[PlaylistController::class,'addSong']);
+        Route::delete('/playlist/{playlist}/{song}',[PlaylistController::class,'removeSong']);
+        Route::get('/playlists/{emotion}}',[PlaylistController::class,'getPlaylistsByEmotion']);
+
+        // ai
+        Route::get('/ai/emotion',[AIController::class,'predict']);
     });
 });

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Artist;
+use App\Models\Song;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -10,6 +13,9 @@ use YoutubeDl\YoutubeDl;
 
 class YoutubeController extends Controller
 {
+
+    protected $delim1 = "</div></div></div></div><div class=\"hwc\"><div class=\"BNeawe tAd8D AP7Wnd\"><div><div class=\"BNeawe tAd8D AP7Wnd\">";
+    protected $delim2 = "</div></div></div></div></div><div><span class=\"hwc\"><div class=\"BNeawe uEec3 AP7Wnd\">";
 
     protected $apiKey;
     protected $part = 'snippet';
@@ -39,10 +45,10 @@ class YoutubeController extends Controller
         $endpoint = config('services.youtube.search_endpoint');
         $type = 'video';
 
-        $url = "$endpoint?part=$this->part&maxResults=$this->maxResults&type=$type&videoCategoryId=$this->category&key=$this->apiKey";
-        if($query)
-            $url .= "&q=$query";
-        if($token)
+        $url = "$endpoint?part=$this->part&maxResults=$this->maxResults&type=$type&videoCategoryId=$this->category&order=relevance&key=$this->apiKey";
+        if ($query)
+            $url .= "&q=" . urlencode($query);
+        if ($token)
             $url .= "&pageToken=$token";
 
         $response = Http::get($url);
@@ -60,6 +66,36 @@ class YoutubeController extends Controller
         $response = Http::get($url);
 
         return response_success($response->body());
+    }
+
+    public function getVideoId(Request $request): JsonResponse
+    {
+        $artist = $request->get('artist');
+        $title = $request->get('title');
+
+        try {
+            $artistRecord = Artist::whereName($artist)->first();
+            $songRecord = Song::where(['title' => $title, 'artist_id' => $artistRecord->id])->first();
+            if ($songRecord->youtube_id)
+                return response_success(['youtube_id' => $songRecord->youtube_id]);
+        } catch (Exception $exception) {
+
+        }
+
+        $endpoint = config('services.youtube.search_endpoint');
+        $type = 'video';
+
+        $url = "$endpoint?part=$this->part&maxResults=1&type=$type&videoCategoryId=$this->category&key=$this->apiKey";
+        $url .= '&q=' . urlencode($artist) . urlencode($title);
+
+        $response = Http::get($url);
+
+        $result = json_decode($response->body())->items[0]->id->videoId;
+
+        $songRecord->youtube_id = $result;
+        $songRecord->save();
+
+        return response_success($result);
     }
 
     public function getAudioFile($id): JsonResponse
@@ -85,8 +121,7 @@ class YoutubeController extends Controller
 
         $video = $collection->getVideos()[0];
 
-        if($video->getError() !== null)
-        {
+        if ($video->getError() !== null) {
             return response_unauthorized_401(response_message($video->getError()));
         }
 
@@ -104,14 +139,71 @@ class YoutubeController extends Controller
         return response_success($result);
     }
 
-    public function getLyrics(): JsonResponse
+    public function getLyrics(Request $request): JsonResponse
     {
-        //libxml_use_internal_errors(true);
-        $page = file_get_contents('https://genius.com/Faydee-far-away-lyrics');
-        $dom = new \DOMDocument();
-        $dom->loadHTML($page, LIBXML_NOWARNING|LIBXML_NOERROR);
-        $result = $dom->childNodes->item(0);
 
+        $artist = $request->get('artist');
+        $title = $request->get('title');
+
+        try {
+            $artistRecord = Artist::whereName($artist)->first();
+            if ($artistRecord) {
+                $songRecord = Song::where(['title' => $title, 'artist_id' => $artistRecord->id])->first();
+                if ($songRecord->lyrics)
+                    return response_success($songRecord->lyrics);
+            }
+        } catch (Exception $exception) {
+            return response_internal_server_error(response_message($exception->getMessage()));
+        }
+
+        // google search url
+        $url = config('services.youtube.google_search_endpoint');
+        if ($artist)
+            $url .= urlencode($artist) . '+';
+        if ($title)
+            $url .= urlencode($title);
+
+
+        $result = 'not found';
+
+        try {
+            // read page content as string
+            $page = file_get_contents($url . '+lyrics');
+            $page = explode($this->delim1, $page)[1];
+            $result = explode($this->delim2, $page);
+        } catch (Exception $exception) {
+            try {
+                // read page content as string
+                $page = file_get_contents($url . '+song+lyrics');
+                $page = explode($this->delim1, $page)[1];
+                $result = explode($this->delim2, $page);
+            } catch (Exception $exception) {
+                try {
+                    // read page content as string
+                    $page = file_get_contents($url . '+song+');
+                    $page = explode($this->delim1, $page)[1];
+                    $result = explode($this->delim2, $page);
+                } catch (Exception $exception) {
+                    try {
+                        // read page content as string
+                        $page = file_get_contents($url);
+                        $page = explode($this->delim1, $page)[1];
+                        $result = explode($this->delim2, $page);
+                    } catch (Exception $exception) {
+                        return response_internal_server_error(response_message($exception->getMessage()));
+                    }
+
+                }
+            }
+        }
+
+        $result = strip_tags($result[0]);
+
+        if (isset($songRecord)) {
+            $songRecord->lyrics = $result;
+            $songRecord->save();
+        }
         return response_success($result);
     }
+
 }
