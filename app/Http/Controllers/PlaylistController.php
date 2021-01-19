@@ -17,7 +17,7 @@ class PlaylistController extends Controller
     public function index(): JsonResponse
     {
         // get all playlists
-        $playlists = current_user()->playlists()->orderBy('name');
+        $playlists = current_user()->playlists()->orderBy('name')->get();
 
         // return success response with playlists
         return response_success($playlists);
@@ -131,5 +131,12 @@ class PlaylistController extends Controller
         $playlists = Playlist::where(['emotion' => $emotion])->orderBy('name')->paginate(10);
 
         return response_success($playlists);
+    }
+
+    public function own(Playlist $playlist): JsonResponse
+    {
+        $owned = current_user()->id === $playlist->user()->id;
+
+        return response_success($owned);
     }
 }

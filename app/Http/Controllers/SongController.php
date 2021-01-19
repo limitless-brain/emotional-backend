@@ -19,7 +19,7 @@ class SongController extends Controller
     public function index(Request $request): JsonResponse
     {
         // gets songs
-        return response_success(Song::withInteractions()->orderBy($request->get('orderBy'),$request->get('order'))
+        return response_success(Song::withData()->orderBy($request->get('orderBy'),$request->get('order'))
             ->paginate(10));
     }
 
@@ -32,7 +32,7 @@ class SongController extends Controller
     public function getSong(string $id): JsonResponse
     {
         // get the song
-        $song = Song::withInteractions()->where(['id' => $id])->get()->first();
+        $song = Song::withData()->where(['id' => $id])->get()->first();
 
         // return success response with song information
         return response_success($song);
@@ -63,7 +63,7 @@ class SongController extends Controller
     {
         // return  success response with lyrics of the song
         if (!$song->lyrics) {
-            $result = getLyrics($song->artist()->name, $song->title);
+            $result = getSongLyrics($song->artist()->name, $song->title);
             return response_success($result);
         }
         return response_success($song->lyrics);

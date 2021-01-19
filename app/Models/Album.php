@@ -12,7 +12,10 @@ class Album extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-    protected $casts = ['artist_id' => 'integer'];
+
+    protected $casts = [
+        'id' => 'string'
+    ];
 
     public function artist(): BelongsTo
     {

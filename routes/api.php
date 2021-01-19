@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SongController;
+use App\Http\Controllers\SpotifyController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\YoutubeController;
 use Illuminate\Http\Request;
@@ -50,8 +51,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/search', [YoutubeController::class, 'search']);
         Route::get('/featured', [YoutubeController::class, 'featured']);
         Route::get('/videos/{id}/audio', [YoutubeController::class, 'getAudioFile']);
+        Route::get('/videos/{id}/info', [YoutubeController::class, 'getVideoInfo']);
         Route::get('/videos/find',[YoutubeController::class,'getVideoId']);
         Route::get('/lyrics',[YoutubeController::class, 'getLyrics']);
+
+        // Spotify
+        Route::get('/spotify/albums',[SpotifyController::class,'getAlbums']);
+        Route::get('/spotify/artists',[SpotifyController::class,'getArtists']);
 
         // Song
         Route::get('/songs',[SongController::class,'index']);
@@ -75,9 +81,10 @@ Route::prefix('v1')->group(function () {
 
         // playlist
         Route::apiResource('/playlists', PlaylistController::class);
-        Route::put('/playlists/{playlist}/{song}',[PlaylistController::class,'addSong']);
+        Route::post('/playlists/{playlist}/{song}',[PlaylistController::class,'addSong']);
+        Route::get('/playlists/{playlist}/own',[PlaylistController::class,'getPlaylistsByEmotion']);
         Route::delete('/playlist/{playlist}/{song}',[PlaylistController::class,'removeSong']);
-        Route::get('/playlists/{emotion}}',[PlaylistController::class,'getPlaylistsByEmotion']);
+        Route::get('/playlists/{emotion}',[PlaylistController::class,'getPlaylistsByEmotion']);
 
         // ai
         Route::get('/ai/emotion',[AIController::class,'predict']);

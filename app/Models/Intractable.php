@@ -79,9 +79,24 @@ trait Intractable
         return $this->isMatched($user, false);
     }
 
-    public function scopeWithInteractions(Builder $query)
+    public function scopeWithData(Builder $query)
     {
-        $query->leftJoinSub(
+        $query
+            ->leftJoinSub(
+                'select id, `name` album_name from albums',
+                'albums',
+                'albums.id',
+                '=',
+                'songs.album_id'
+            )
+            ->leftJoinSub(
+                'select id, `name` artist_name from artists',
+                'artists',
+                'artists.id',
+                '=',
+                'songs.artist_id'
+            )
+            ->leftJoinSub(
             'select song_id, sum(liked) likes, sum(`match`) matches, sum(case when play_count = 0 then 0 else 1 end) played_by_users from interactions group by song_id',
             'i',
             'i.song_id',

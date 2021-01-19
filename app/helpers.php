@@ -12,6 +12,9 @@ use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use YoutubeDl\Entity\Video;
+use YoutubeDl\Options;
+use YoutubeDl\YoutubeDl;
 
 /**
  * The variable define token life at specific number days
@@ -135,7 +138,7 @@ function str_to_array($str, $separator=',', $junk = ['[',']','\''], $replace='')
  * @param string $title
  * @return string the lyrics string
  */
-function getLyrics(string $artist, string $title): string {
+function getSongLyrics(string $artist, string $title): string {
 
     // html delimiters
     $delim1 = "</div></div></div></div><div class=\"hwc\"><div class=\"BNeawe tAd8D AP7Wnd\"><div><div class=\"BNeawe tAd8D AP7Wnd\">";
@@ -205,7 +208,7 @@ function getLyrics(string $artist, string $title): string {
 
                 } catch (Exception $exception) {
                     // send an exception
-                    return response_internal_server_error(response_message($exception->getMessage()));
+                    return 'lyrics not found';
                 }
             }
         }
@@ -213,6 +216,25 @@ function getLyrics(string $artist, string $title): string {
 
     // return the result
     return strip_tags($result);
+}
+
+function getYoutubeVideoInfo(string  $id): Video
+{
+    // create yt instance
+    $yt = new YoutubeDl();
+
+    // video endpoint
+    $endpoint = config('services.youtube.video_endpoint');
+
+    // request file download
+    $collection = $yt->download(
+        Options::create()
+            ->downloadPath("mp3/$id")
+            ->url("$endpoint?v=$id")
+            ->skipDownload(true)
+    );
+
+    return $collection->getVideos()[0];
 }
 
 

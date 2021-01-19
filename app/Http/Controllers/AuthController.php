@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Playlist;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -103,7 +104,11 @@ class AuthController extends Controller
         $attrs['password'] = bcrypt($attrs['password']);
 
         // create user object
-        User::create($attrs);
+        $user = User::create($attrs);
+
+        // create default playlist
+        $user->playlists()->save(new Playlist(['name' => 'recently played']));
+        $user->playlists()->save(new Playlist(['name' => 'favorite']));
 
         // return response as json object
         return response_data_created(response_message('Successfully signed up the user.'));
