@@ -120,6 +120,7 @@ class YoutubeController extends Controller
         $collection = $yt->download(
             Options::create()
                 ->downloadPath("mp3/$id")
+                ->output("{$id}.%(ext)s")
                 ->url("$endpoint?v=$id")
         );
 
