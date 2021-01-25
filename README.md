@@ -69,6 +69,12 @@ You can now access the server at http://localhost:8000
     php artisan migrate
     php artisan serve
 
+### Required Files
+Due to github file size restrictions, big files has been moved to google drive.
+[**Shared Files**](https://drive.google.com/drive/folders/1v9ygEWii37KPXUdZ2EhkL3PxUvmsKbuI?usp=sharing)
+* Emotional AI files should be extracted to /app/Python .
+* Emotional db files should be extracted to /database .
+
 ### Database seeding
 
 **Populate the database with seed data with relationships which includes users, articles, comments, tags, favorites and follows. This can help you to quickly start testing the api or couple a frontend and start using it with ready content.**
@@ -88,13 +94,13 @@ Run the database seeder, and you're done
 ### Required Libraries
 - [Python3](https://www.python.org/) to call the AI model and
   make the prediction.
-    > sudo apt install python3 python3-pip
-  - In order to install the required libraries for the AI and test at the same time,
-    run the script model script.
-    > python3 app/Python/emotional_ai.py
-    
+  > sudo apt install python3 python3-pip
+    - In order to install the required libraries for the AI and test at the same time,
+      run the script model script.
+      > python3 app/Python/emotional_ai.py
 
-- [YT-DL](https://github.com/ytdl-org/youtube-dl) to download videos from youtube. 
+
+- [YT-DL](https://github.com/ytdl-org/youtube-dl) to download videos from youtube.
   ```
   sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
   sudo chmod a+rx /usr/local/bin/youtube-dl
@@ -152,7 +158,7 @@ This contains all APIs specification which make the development of frontend much
 
 - `.env` - Environment variables can be set in this file
     - ### Database
-      >- DB_CONNECTION=mysql 
+      >- DB_CONNECTION=mysql
       >- DB_HOST=127.0.0.1
       >- DB_PORT=3306
       >- DB_DATABASE=emotional
