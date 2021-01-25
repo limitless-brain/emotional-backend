@@ -12,9 +12,6 @@ Emotional API is a web REST-Ful API based on Laravel framework, which serve as s
 # Getting Started
 Emotional API using **[Spotify](https://developer.spotify.com/)** and **[Youtube](https://developers.google.com/youtube/v3)** APIs to provide songs data. You must have APIs keys and secrets in order to have fully functional APIs.
 
-## LINUX
-Linux support auto setup using the setup.sh file.
-
 ## Manual Setup
 You need to install the **[required libraries](#required-libraries)** and configure the **[Environment Variables](#environment-variables)** in .env file with your APIs keys and secrets.
 
